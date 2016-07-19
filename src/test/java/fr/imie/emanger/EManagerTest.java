@@ -78,6 +78,33 @@ public class EManagerTest {
 		assertNull(employeeDao.read(id));
 	}
 	
+	@Test
+	public void testContactDao() {
+		Contact c1 = new Contact();
+		c1.setAddress("5 rue Augustin fresnal");
+		c1.setPhone("0123456789");
+
+		printHeader("Création du contact c1 :");
+		contactDao.create(c1);
+		System.out.println(c1.toString());
+
+		printHeader("Récupération du contact c1 :");
+		Contact c2 = contactDao.read(c1.getId());
+		assertContactEquals(c1, c2);
+
+		printHeader("Modification du contact c1");
+		c2.setAddress("5 rue Augustin Fresnel");
+		contactDao.update(c2);
+		Contact c3 = contactDao.read(c2.getId());
+		assertContactEquals(c2, c3);
+
+		printHeader("Suppression du contact c1");
+		final long id = c3.getId();
+		contactDao.delete(c3);
+
+		assertNull(contactDao.read(id));
+	}
+	
 	private void assertEmployeeEquals(final Employee pE1, final Employee pE2) {
 		assertEquals(pE1.getFirstName(), pE2.getFirstName());
 		assertEquals(pE1.getLastName(), pE2.getLastName());
@@ -85,6 +112,11 @@ public class EManagerTest {
 		assertEquals(pE1.getContact().toString(), pE2.getContact().toString());
 		assertTrue(pE1.getMissions().size() == pE2.getMissions().size());
 		assertTrue(pE1.getTrainings().size() == pE2.getTrainings().size());
+	}
+	
+	private void assertContactEquals(final Contact pC1, final Contact pC2) {
+		assertEquals(pC1.getAddress(), pC2.getAddress());
+		assertEquals(pC1.getPhone(), pC2.getPhone());
 	}
 
 	private void printHeader(final String pText) {
