@@ -105,6 +105,37 @@ public class EManagerTest {
 		assertNull(contactDao.read(id));
 	}
 	
+	@Test
+	public void testMissionDao() {
+		final Employee e1 = employeeDao.read(1L);
+		
+		Mission m1 = new Mission();
+		m1.setStart(123456789L);
+		m1.setEnd(987654321L);
+		m1.setEmployee(e1);
+		
+		printHeader("Création de la mission m1 :");
+		missionDao.create(m1);
+		
+		printHeader("Récupération de la mission m1");
+		Mission m2 = missionDao.read(m1.getId());
+		
+		assertMissionEquals(m1, m2);
+		
+		printHeader("Modification de la mission m2");
+		m2.setStart(222222222L);
+		missionDao.update(m2);
+		
+		assertEquals(m2, missionDao.read(m2.getId()));
+		
+		printHeader("Suppression de la mission m2");
+		final long id = m2.getId();
+		
+		missionDao.delete(m2);
+		
+		assertNull(missionDao.read(id));
+	}
+	
 	private void assertEmployeeEquals(final Employee pE1, final Employee pE2) {
 		assertEquals(pE1.getFirstName(), pE2.getFirstName());
 		assertEquals(pE1.getLastName(), pE2.getLastName());
@@ -117,6 +148,13 @@ public class EManagerTest {
 	private void assertContactEquals(final Contact pC1, final Contact pC2) {
 		assertEquals(pC1.getAddress(), pC2.getAddress());
 		assertEquals(pC1.getPhone(), pC2.getPhone());
+	}
+	
+	private void assertMissionEquals(final Mission pM1, final Mission pM2) {
+		assertTrue(pM1.getId() == pM2.getId());
+		assertTrue(pM1.getStart() == pM2.getStart());
+		assertTrue(pM1.getEnd() == pM2.getEnd());
+		assertEquals(pM1.getEmployee(), pM1.getEmployee());
 	}
 
 	private void printHeader(final String pText) {
